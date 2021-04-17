@@ -1,68 +1,36 @@
 # Project 1. MIPS Assembler
-This project is to implement a MIPS ISA assembler and a given code is a basic skeleton for input and output.
+  첫번째, 컴퓨터 구조 과제는 MIPS Assemlbler를 설계하는 과제였다.<br>
+ sampleinput 폴더에 있는 Assembly Code를 파싱해와서 MIPS CODE에 맞는 binary code 로 변환하면 되는 과제였다.<br>
+  이 과제를 수행하기 위해서는 두가지 방법이 있었다.<br>
+ 먼저, DATA Table과 Text Table을 링크드리스트의 자료구조 형태로 만들어서 각 포멧에 맞는 binary code로 변환하는 것이다.<br>
+두번째, 방법은 교수님이 주신 skeleton code 처럼 tepfile() 함수를 이용해, 임시의 file을 만들어 DATA와 Text Talbe을 만들어 활용 하는 방법이다.<br>
 
 ## Introductions
-Baiscally, the code written in `assembler.c` operates only creation of file for input and output. Each student requires to implement parsing, converting or any functions based on the skeleton code. The detailed instructions are desribed in `handout/Project_1.pdf`.
-
-There are two directories for this project. The code will read a `.s` file from `sample_input` and it will produce `.o` file in same directory. 
-
-The files in `sample_output` are used when you test your output with them. The following is an example of command for the skeleton code:
-
-```shell
-# Usage
-$ ./assembler sample_input/example1.s   # This will produce sample_input/example1.o
-
-# Test
-$ make test # This will test all examples in sample_output
-```
-
-## Description for Skeleton Code
-The skeleton code we provided is part of a two-pass assembler. Basically, the two-pass assembler reads the assembly code twice and converts it to binary code (machine code).
 
 ![MIPS Assembler](./handout/mips_assembler_processing_example.png)
-*MIPS Assembler processing example*
+ 테이블의 구조이다. 위의 사진처럼 tepfile()을 이용하여 Data Table은 데이터 테이블 file에, Text Table file에 저장하는 방법을 이용 했다.<br>
+ 이 때, Data Table의 시작 주소는 0X1000000  이였고 Text Table의 시작 주소는 0x0040000 이다.
+ 위와 같이 text 구조와 data 구조를 서로 떨어트려 저장하는 이유는 MIPS 구조의 컨셉이라고 하셨는데, 정확한 이유는 잘모르겠다.
+ 어쨋든, Data table의 시작 주소와 Text table의 시작 주소를 잘 고려하여, file을 만들어주고
+ 2-pass 과정에서 MIPS의 포멧에 맞게 binary code를 만들어주면 된다.
 
-As shown in the figure above, the skeleton code takes an assembly code as an input. Then, in the 1st pass, you need to create a symbol table which specifies a key-value pair to map labels to memory addresses. Here, you are supposed to write code for` make_symbol_table()`. While you are building the symbol table, you may want to extract the `data` and `code` segment separately to simplify the 2nd pass.
-
-In the 2nd pass, the skeleton code just reads the text segement and translates each line of codes into binary (machine code). Here, you are supposed to fill out `make_binary_code()` code. While translating, you may encounter the labels. Now you can translate the labels to the memory addresses by referencing the symbol table you built in the 1st pass. 
-
-
-## Hints
-All students are supposed to implement functions below.
+## Funtion Desciption
 
 1. __void make_symbol_table(FILE *input)__  
-    A role of this function is to make symbol table for converting assembly code to binary.
-    This function should be able to parse the line and fill the symbol table. 
-    Both data and text line are added to own segment.
-
+       Data table 을 생성하는 함수이다.
 2. __void make_binary_file(FILE *output)__  
-    Make binary file using the previously created symbol table. 
-    You need to print binary lines to the `.o` file(=`FILE *output`) mentioned above.
-    You can use `record_text_section()` and `record_data_section`. 
-    These functions will print binary code converted from assembly code.
-    
+       Text table 을 생성하는 함수이다.
 3. __void record_text_section(FILE *output)__  
-    In this function, you need to translate text segment line by line to binary code. 
-    The binary codes should be printed into output file.
-    
+       생성한 Text Table을 참고하여 각 inst에 맞는 binary code를 만드는 함수이다.
 4. __void record_data_section(FILE *output)__  
-    Likewise text section, translates the data segment to binary code.
-    It convert their initialized values to binary code and print into output file.
+       생성한 Data Table을 참고하여 각 inst에 맞는 binary code를 만드는 함수이다.
 
-The code that need to be implemented is written as `/* blank */` with short comments. If you do not want to use the skeleton code, it is allowed to write code from scratch.
-
-## Debug
-We prepared debug option. It is placed at the top of the code. If you want to enable debug option, define macro `DEBUG` as `1`.
-If you want to disable, define macro `DEBUG` as `0`. We hope this option helps you understand the code flow.
-
-## Reference functions
-Description of functions used in this project.
-1. __FILE* tmpfile(void)__  
-    Create a temporary file and return the file stream pointer.
-    This function opens the temporary file in wb+ mode.
-    
-2. __void rewind(FILE *fp)__  
-    Point back to the start of the file stream.
- 
-## Q & A
-If you find any errors in this code or have a question, please leave it on AjouBB.
+## review
+ 7번째, sample만 strtok(" ")으로 토큰이 생성되지 않아서 따로 예외처리를 해줬다.<br>
+아마 sample 생성과정에서 뭔가 다르게 공백을 처리한거 같다.<br>
+어쨋든, 이번 과제로 인해 하이 랭귀지에서 로우 랭귀지로 번역되는 과정을 재대로 이해할수 있었다.<br>
+우리가 작성한 c코드는 전처리기->컴파일러->어셈블러->링킹->로더 과정을 거쳐서 컴퓨터가 수행할수 있는 binary code로 변환된다는 것을 알았고<br>
+각 과정에 따라 어떻게하면 좀더 효율적으로 코드를 작성할수 있을지 알수 있어서 좋았다.<br>
+예를 들어 재귀함수를 사용하는 경우 돌아갈 주소와 변수들을 stack pointer를 이용하여 메모리에 저장해야 하기 때문에<br>
+cost가 높았다는 것을 어셈블리어를 직접 작성하면서 알수 있었다.<br>
+또한, 같은 동작을 하는 코드라도 어떻게 하이 랭귀지를 작성하냐에 따라 만들어지는 inst의 갯수가 달라져 속도의 차이가 날 수 있다는 것을 알았다.<br>
