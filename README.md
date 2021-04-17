@@ -25,7 +25,9 @@
 4. __void record_data_section(FILE *output)__  
        생성한 Data Table을 참고하여 각 inst에 맞는 binary code를 만드는 함수이다.
 
-## review
+## Result
+ ![컴퓨터구조 결과](https://user-images.githubusercontent.com/59689327/115106880-4ff66c00-9fa2-11eb-95a2-b8a9c9b21617.PNG)
+## Review
  7번째, sample만 strtok(" ")으로 토큰이 생성되지 않아서 따로 예외처리를 해줬다.<br>
 아마 sample 생성과정에서 뭔가 다르게 공백을 처리한거 같다.<br>
 어쨋든, 이번 과제로 인해 하이 랭귀지에서 로우 랭귀지로 번역되는 과정을 재대로 이해할수 있었다.<br>
